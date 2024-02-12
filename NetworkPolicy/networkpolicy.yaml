@@ -3,7 +3,7 @@ apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
   # 정책 이름
-  name: example-network-policy
+  name: ngins-policy
   # 정책 적용 Namespaces
   namespace: default
 spec:
