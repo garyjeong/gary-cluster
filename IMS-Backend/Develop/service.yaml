@@ -1,12 +1,13 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: ims-backend
+  name: ims-backend-service
 spec:
-  type: ClusterIP
+  type: NodePort
   selector:
     app: ims-backend
   ports:
-  - name: http
+  - protocol: TCP
     port: 8000
     targetPort: http
+    nodePort: 31000
