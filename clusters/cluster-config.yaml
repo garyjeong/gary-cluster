@@ -1,0 +1,70 @@
+# EKS 클러스터 설정 (최소 비용 구성)
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: gary-cluster
+  region: ap-northeast-2
+  version: "1.28"
+
+# IAM 설정
+iam:
+  withOIDC: true
+  serviceAccounts:
+    - metadata:
+        name: aws-load-balancer-controller
+        namespace: kube-system
+      wellKnownPolicies:
+        awsLoadBalancerController: true
+    - metadata:
+        name: external-dns
+        namespace: kube-system
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonRoute53FullAccess
+    - metadata:
+        name: cert-manager
+        namespace: cert-manager
+      attachPolicyARNs:
+        - arn:aws:iam::aws:policy/AmazonRoute53FullAccess
+
+# 관리형 노드 그룹 (최소 비용)
+managedNodeGroups:
+  - name: gary-nodes
+    instanceType: t4g.small  # Graviton (ARM64) + 저비용
+    desiredCapacity: 1
+    minSize: 0               # 비용 절약을 위해 0까지 스케일 다운 가능
+    maxSize: 3
+    spot: true               # SPOT 인스턴스로 비용 절약
+    volumeSize: 20           # 20GB GP3
+    volumeType: gp3
+    ssh:
+      allow: false           # 보안을 위해 SSH 비활성화
+    labels:
+      node-class: "general-purpose"
+      cost-optimization: "spot"
+    tags:
+      Environment: "development"
+      Project: "gary-cluster"
+      CostCenter: "development"
+
+# VPC 설정 (기본값 사용으로 비용 절약)
+vpc:
+  enableDnsHostnames: true
+  enableDnsSupport: true
+
+# CloudWatch 로깅 (필요한 것만)
+cloudWatch:
+  clusterLogging:
+    enable: ["audit", "authenticator"]
+    logRetentionInDays: 7  # 비용 절약을 위해 짧은 보존 기간
+
+# 애드온 설정
+addons:
+  - name: vpc-cni
+    version: latest
+  - name: coredns
+    version: latest
+  - name: kube-proxy
+    version: latest
+  - name: aws-ebs-csi-driver
+    version: latest

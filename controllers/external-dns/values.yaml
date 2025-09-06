@@ -1,0 +1,52 @@
+# ExternalDNS Helm Values
+provider: aws
+domainFilters:
+  - garyzone.pro
+
+sources:
+  - ingress
+  - service
+
+registry: txt
+txtOwnerId: gary-cluster
+
+serviceAccount:
+  create: false  # eksctl로 이미 생성됨  
+  name: external-dns
+
+# AWS 특정 설정
+aws:
+  region: ap-northeast-2
+  zoneType: public
+  evaluateTargetHealth: true
+
+# 리소스 제한 (비용 최적화)
+resources:
+  limits:
+    cpu: 50m
+    memory: 50Mi
+  requests:
+    cpu: 25m
+    memory: 25Mi
+
+# 노드 선택자 (ARM64 노드 대응)
+nodeSelector:
+  kubernetes.io/arch: arm64
+
+# 로그 설정
+logLevel: info
+logFormat: text
+
+# 동기화 간격
+interval: 1m
+
+# 정책 설정
+policy: sync  # upsert-only는 삭제 안함, sync는 완전 동기화
+
+# 애노테이션 필터
+annotationFilter: external-dns.alpha.kubernetes.io/hostname
+
+# 메트릭 설정
+metrics:
+  enabled: true
+  port: 7979

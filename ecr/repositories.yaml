@@ -1,0 +1,106 @@
+# ECR 리포지토리 목록
+repositories:
+  - name: hair-model-creator
+    description: "AI 헤어 모델링 서비스"
+    imageTagMutability: MUTABLE
+    scanOnPush: true
+    lifecyclePolicy:
+      rules:
+        - rulePriority: 1
+          description: "Keep only 10 latest images"
+          selection:
+            tagStatus: ANY
+            countType: imageCountMoreThan
+            countNumber: 10
+          action:
+            type: expire
+
+  - name: household-ledger
+    description: "가계부 관리 애플리케이션"
+    imageTagMutability: MUTABLE
+    scanOnPush: true
+    lifecyclePolicy:
+      rules:
+        - rulePriority: 1
+          description: "Keep only 10 latest images"
+          selection:
+            tagStatus: ANY
+            countType: imageCountMoreThan
+            countNumber: 10
+          action:
+            type: expire
+
+  - name: gary-saju-service
+    description: "사주 분석 서비스"
+    imageTagMutability: MUTABLE
+    scanOnPush: true
+    lifecyclePolicy:
+      rules:
+        - rulePriority: 1
+          description: "Keep only 10 latest images"
+          selection:
+            tagStatus: ANY
+            countType: imageCountMoreThan
+            countNumber: 10
+          action:
+            type: expire
+
+  - name: spark-prompt
+    description: "AI 프롬프트 최적화 도구"
+    imageTagMutability: MUTABLE
+    scanOnPush: true
+    lifecyclePolicy:
+      rules:
+        - rulePriority: 1
+          description: "Keep only 10 latest images"
+          selection:
+            tagStatus: ANY
+            countType: imageCountMoreThan
+            countNumber: 10
+          action:
+            type: expire
+
+  - name: liview-backend
+    description: "LiView 백엔드 API"
+    imageTagMutability: MUTABLE
+    scanOnPush: true
+    lifecyclePolicy:
+      rules:
+        - rulePriority: 1
+          description: "Keep only 15 latest images"
+          selection:
+            tagStatus: ANY
+            countType: imageCountMoreThan
+            countNumber: 15
+          action:
+            type: expire
+
+  - name: react-wedding-invitation-letter
+    description: "모바일 청첩장 서비스"
+    imageTagMutability: MUTABLE
+    scanOnPush: true
+    lifecyclePolicy:
+      rules:
+        - rulePriority: 1
+          description: "Keep only 10 latest images"
+          selection:
+            tagStatus: ANY
+            countType: imageCountMoreThan
+            countNumber: 10
+          action:
+            type: expire
+
+  - name: liview-frontend
+    description: "LiView 프론트엔드"
+    imageTagMutability: MUTABLE
+    scanOnPush: true
+    lifecyclePolicy:
+      rules:
+        - rulePriority: 1
+          description: "Keep only 15 latest images"
+          selection:
+            tagStatus: ANY
+            countType: imageCountMoreThan
+            countNumber: 15
+          action:
+            type: expire
