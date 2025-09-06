@@ -54,12 +54,14 @@ gary-cluster/
 ## 🔍 주요 파일 설명
 
 ### 클러스터 설정
+
 - **`clusters/cluster-config.yaml`**: EKS 클러스터 생성을 위한 eksctl 설정
   - t4g.small SPOT 인스턴스 (ARM64)
   - IRSA 설정 (ALB Controller, ExternalDNS, cert-manager)
   - 최소 비용 최적화 설정
 
 ### 컨트롤러 설정
+
 - **`controllers/aws-load-balancer/values.yaml`**: ALB Controller Helm 설정
 - **`controllers/external-dns/values.yaml`**: ExternalDNS 설정 (garyzone.pro)
 - **`controllers/cert-manager/`**: TLS 인증서 자동 관리
@@ -67,19 +69,23 @@ gary-cluster/
   - `cluster-issuer.yaml`: Let's Encrypt ClusterIssuer
 
 ### 애플리케이션
+
 - **`applications/namespaces/environments.yaml`**: 환경별 네임스페이스
 - **`applications/smoke-test/hello-world.yaml`**: 테스트용 애플리케이션
   - hello.dev.garyzone.pro 도메인으로 접근 가능
 
 ### GitOps 설정
+
 - **`gitops/app-of-apps/root-app.yaml`**: Argo CD 루트 애플리케이션
 - **`gitops/applications/`**: 개별 애플리케이션 정의
 
 ### 환경별 설정
+
 - **`environments/dev/`**: 개발 환경 Kustomize 설정
 - **`environments/prod/`**: 프로덕션 환경 Kustomize 설정
 
 ### 유틸리티 스크립트
+
 - **`scripts/cluster-up.sh`**: 노드 스케일 업 (0→1)
 - **`scripts/cluster-down.sh`**: 노드 스케일 다운 (→0), 비용 절약
 - **`scripts/cost-report.sh`**: 실시간 비용 리포트
@@ -87,6 +93,7 @@ gary-cluster/
 ## 🚀 사용 워크플로
 
 ### 1. 초기 설정
+
 ```bash
 # 1. 클러스터 생성
 eksctl create cluster -f clusters/cluster-config.yaml
@@ -101,6 +108,7 @@ helm install external-dns bitnami/external-dns \
 ```
 
 ### 2. 일상 운영
+
 ```bash
 # 개발 시작
 ./scripts/cluster-up.sh
@@ -113,6 +121,7 @@ helm install external-dns bitnami/external-dns \
 ```
 
 ### 3. GitOps 배포
+
 ```bash
 # Argo CD 설치 후
 kubectl apply -f gitops/app-of-apps/root-app.yaml
