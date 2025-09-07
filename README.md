@@ -100,6 +100,14 @@ eksctl create cluster \
 
 상세한 단계별 가이드는 [TODO.md](./TODO.md)를 참조하세요.
 
+### 4. 주요 설정 변경사항
+
+사용 전 다음 설정들을 실제 값으로 변경해주세요:
+
+- **GitHub 리포지토리**: `gitops/` 폴더의 `USERNAME`을 실제 GitHub 사용자명으로 변경
+- **이메일 주소**: `controllers/cert-manager/cluster-issuer.yaml`의 `YOUR_EMAIL`을 실제 이메일로 변경  
+- **ACM 인증서**: `applications/smoke-test/hello-world.yaml`의 `YOUR_ACCOUNT_ID`, `YOUR_CERT_ID`를 실제 값으로 변경
+
 ## 📁 프로젝트 구조
 
 ```
@@ -107,8 +115,7 @@ gary-cluster/
 ├── README.md                   # 프로젝트 개요 (현재 파일)
 ├── TODO.md                     # 단계별 체크리스트
 ├── clusters/                   # EKS 클러스터 설정
-│   ├── cluster-config.yaml     # eksctl 클러스터 정의
-│   └── access-entries.yaml     # EKS Access Entry 설정
+│   └── cluster-config.yaml     # eksctl 클러스터 정의
 ├── controllers/                # 쿠버네티스 컨트롤러
 │   ├── aws-load-balancer/      # ALB Controller 설정
 │   ├── external-dns/           # ExternalDNS 설정
@@ -175,13 +182,14 @@ aws ec2 describe-instances --filters "Name=tag:eks:cluster-name,Values=gary-clus
 ### ECR 접근
 
 ```bash
-# ECR 로그인
-aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin {ACCOUNT}.dkr.ecr.ap-northeast-2.amazonaws.com
+# ECR 로그인 (ACCOUNT_ID를 실제 AWS Account ID로 변경)
+ACCOUNT_ID=$(aws sts get-caller-identity --query Account --output text)
+aws ecr get-login-password --region ap-northeast-2 | docker login --username AWS --password-stdin $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com
 
 # 이미지 빌드 및 푸시 예시
 docker build -t hair-model-creator .
-docker tag hair-model-creator:latest {ACCOUNT}.dkr.ecr.ap-northeast-2.amazonaws.com/hair-model-creator:latest
-docker push {ACCOUNT}.dkr.ecr.ap-northeast-2.amazonaws.com/hair-model-creator:latest
+docker tag hair-model-creator:latest $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/hair-model-creator:latest
+docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/hair-model-creator:latest
 ```
 
 ## 🔒 보안 및 권한

@@ -6,7 +6,7 @@ metadata:
 spec:
   acme:
     server: https://acme-v02.api.letsencrypt.org/directory
-    email: admin@garyzone.pro  # 실제 이메일로 변경
+    email: YOUR_EMAIL@garyzone.pro  # 실제 이메일 주소로 변경
     privateKeySecretRef:
       name: letsencrypt-prod
     solvers:
@@ -26,7 +26,7 @@ metadata:
 spec:
   acme:
     server: https://acme-staging-v02.api.letsencrypt.org/directory
-    email: admin@garyzone.pro  # 실제 이메일로 변경
+    email: YOUR_EMAIL@garyzone.pro  # 실제 이메일 주소로 변경
     privateKeySecretRef:
       name: letsencrypt-staging
     solvers:
