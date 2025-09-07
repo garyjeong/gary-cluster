@@ -5,7 +5,7 @@ kind: ClusterConfig
 metadata:
   name: gary-cluster
   region: ap-northeast-2
-  version: "1.28"
+  version: "1.30"
 
 # IAM 설정
 iam:
@@ -55,7 +55,7 @@ vpc:
 # CloudWatch 로깅 (필요한 것만)
 cloudWatch:
   clusterLogging:
-    enable: ["audit", "authenticator"]
+    enableTypes: ["audit", "authenticator"]
     logRetentionInDays: 7  # 비용 절약을 위해 짧은 보존 기간
 
 # 애드온 설정

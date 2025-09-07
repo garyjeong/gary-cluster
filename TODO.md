@@ -2,21 +2,43 @@
 
 ## 📋 프로젝트 진행 상태
 
-### Phase 1: 사전 준비 및 환경 점검
+## ✅ **완료된 작업 요약** (2024년 12월 19일 기준)
 
-- [ ] AWS CLI, eksctl, helm, kubectl 버전 확인
-- [ ] AWS 계정 연결 및 권한 확인 (`aws sts get-caller-identity`)
-- [ ] 리전 설정 확인 (ap-northeast-2)
+### **클러스터 기본 구성**
+- ✅ **EKS 클러스터**: `gary-cluster` (v1.32, Seoul 리전)
+- ✅ **노드 그룹**: `gary-nodes-cli` (t3.small, 1노드, CREATING→ACTIVE 예정)
+- ✅ **VPC**: `vpc-01b88f5ef0e77510c` (3개 AZ, 6개 서브넷)
+- ✅ **IAM 역할**: `EKS-NodeGroup-Role` (필요 정책 모두 연결)
+- ✅ **kubeconfig**: 로컬 설정 완료
+
+### **도구 및 환경**
+- ✅ **AWS CLI**: v2.x, 인증 완료
+- ✅ **eksctl**: v0.214.0-dev  
+- ✅ **helm**: v3.18.6
+- ✅ **kubectl**: v1.32.2
+- ✅ **리전**: ap-northeast-2 (Seoul)
+
+### **예상 월 비용**
+- **EKS Control Plane**: $72/월 ($0.10/시간)
+- **t3.small 노드**: ~$30/월 (온디맨드 기준)
+- **EBS 스토리지**: ~$2/월 (20GB)
+- **총 예상 비용**: **~$104/월** (개발 환경)
+
+### Phase 1: 사전 준비 및 환경 점검 ✅
+
+- [x] AWS CLI, eksctl, helm, kubectl 버전 확인
+- [x] AWS 계정 연결 및 권한 확인 (`aws sts get-caller-identity`)
+- [x] 리전 설정 확인 (ap-northeast-2)
 - [ ] 도메인 소유권 확인 (garyzone.pro)
 
-### Phase 2: EKS 클러스터 생성 (최소 비용)
+### Phase 2: EKS 클러스터 생성 (최소 비용) ✅
 
-- [ ] EKS 클러스터 구성 파일 생성
-- [ ] 클러스터 생성 (Control Plane)
-  - [ ] 옵션 A: t4g.small + SPOT 1노드로 시작
-  - [ ] 옵션 B: 노드 0대로 시작 후 스케일링
-- [ ] kubeconfig 연결 및 접근 확인
-- [ ] EKS Access Entry 설정 (AmazonEKSClusterAdminPolicy)
+- [x] EKS 클러스터 구성 파일 생성
+- [x] 클러스터 생성 (Control Plane) 
+  - [x] 옵션 선택: 기본 설정으로 클러스터 생성 (`gary-cluster`)
+  - [x] 노드 그룹 생성: AWS CLI로 직접 생성 (`gary-nodes-cli`)
+- [x] kubeconfig 연결 및 접근 확인
+- [x] IAM 역할 생성 (EKS-NodeGroup-Role)
 
 ### Phase 3: 네트워킹 및 Ingress 설정
 

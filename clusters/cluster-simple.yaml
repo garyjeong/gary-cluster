@@ -1,0 +1,26 @@
+# EKS 클러스터 최소 설정 (오류 방지)
+apiVersion: eksctl.io/v1alpha5
+kind: ClusterConfig
+
+metadata:
+  name: gary-cluster
+  region: ap-northeast-2
+  version: "1.30"
+
+# IAM OIDC 활성화
+iam:
+  withOIDC: true
+
+# 관리형 노드 그룹
+managedNodeGroups:
+  - name: gary-nodes
+    instanceType: t4g.small
+    desiredCapacity: 1
+    minSize: 0
+    maxSize: 3
+    spot: true
+    ssh:
+      allow: false
+    tags:
+      Environment: development
+      Project: gary-cluster

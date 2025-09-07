@@ -4,10 +4,26 @@
 
 ## 🎯 프로젝트 목표
 
-- **최소 비용 EKS 클러스터** (월 $30 이하)
+- **최소 비용 EKS 클러스터** (월 $104 실제 구성)
 - **자동 도메인 관리** (\*.garyzone.pro)
 - **컨테이너 레지스트리 통합** (ECR 7개 리포지토리)
 - **GitOps 기반 배포** (Argo CD App-of-Apps)
+
+## 📊 **현재 구축 상태** (2024.12.19)
+
+### ✅ **완료된 구성요소**
+- **EKS 클러스터**: `gary-cluster` (v1.32) 
+- **노드 그룹**: `gary-nodes-cli` (t3.small, 1노드)
+- **VPC**: `vpc-01b88f5ef0e77510c` (3 AZ, 6 서브넷)
+- **IAM 역할**: `EKS-NodeGroup-Role` (완전 구성됨)
+- **kubeconfig**: 로컬 설정 완료
+
+### 🔄 **다음 단계**
+- AWS Load Balancer Controller 설치
+- ExternalDNS 설치 (garyzone.pro 연동)  
+- TLS 인증서 설정
+- ECR 리포지토리 7개 생성
+- 스모크 테스트 및 GitOps 설정
 
 ## 🏗️ 아키텍처 개요
 
@@ -56,12 +72,21 @@
 - **AWS 리전**: ap-northeast-2 (Seoul)
 - **도메인**: garyzone.pro
 
-### 리소스 사양
+### 리소스 사양 (실제 구성 기준)
 
-- **EKS Control Plane**: $0.10/hour
-- **Worker Node**: t4g.small (2 vCPU, 2GB RAM) + SPOT 할인
-- **스토리지**: 20GB GP3 볼륨
-- **예상 월 비용**: ~$25-30 (개발 환경 기준)
+- **EKS Control Plane**: $0.10/hour ($72/월)
+- **Worker Node**: t3.small (2 vCPU, 2GB RAM) 온디맨드
+- **스토리지**: 기본 EBS 볼륨
+- **실제 월 비용**: ~$104/월 (개발 환경)
+  
+### 비용 절약 방법
+```bash
+# 노드를 0대로 스케일 다운 (Control Plane만 유지)
+aws eks update-nodegroup-config --cluster-name gary-cluster --nodegroup-name gary-nodes-cli --scaling-config minSize=0,maxSize=2,desiredSize=0
+
+# 필요할 때 노드를 1대로 확장
+aws eks update-nodegroup-config --cluster-name gary-cluster --nodegroup-name gary-nodes-cli --scaling-config minSize=0,maxSize=2,desiredSize=1
+```
 
 ## 🚀 빠른 시작
 
@@ -80,20 +105,28 @@ aws sts get-caller-identity
 
 ### 2. 클러스터 생성
 
+#### **실제 적용된 방법 (2024.12.19)**
+
 ```bash
-# 클러스터 생성 (최소 비용 설정)
+# 1. EKS 클러스터 생성 (Control Plane)
 eksctl create cluster \
   --name gary-cluster \
   --region ap-northeast-2 \
-  --nodegroup-name gary-nodes \
-  --node-type t4g.small \
   --nodes 1 \
-  --nodes-min 0 \
-  --nodes-max 3 \
-  --spot \
-  --volume-size 20 \
-  --ssh-access=false \
-  --managed
+  --with-oidc
+
+# 2. IAM 역할 생성 (노드 그룹용)
+aws iam create-role --role-name EKS-NodeGroup-Role --assume-role-policy-document file://nodegroup-trust-policy.json
+aws iam attach-role-policy --role-name EKS-NodeGroup-Role --policy-arn arn:aws:iam::aws:policy/AmazonEKSWorkerNodePolicy
+
+# 3. 노드 그룹 생성 (AWS CLI 직접 사용)
+aws eks create-nodegroup \
+  --cluster-name gary-cluster \
+  --nodegroup-name gary-nodes-cli \
+  --subnets subnet-xxx subnet-yyy subnet-zzz \
+  --node-role arn:aws:iam::ACCOUNT:role/EKS-NodeGroup-Role \
+  --instance-types t3.small \
+  --scaling-config minSize=0,maxSize=2,desiredSize=1
 ```
 
 ### 3. 핵심 컴포넌트 설치
@@ -105,7 +138,7 @@ eksctl create cluster \
 사용 전 다음 설정들을 실제 값으로 변경해주세요:
 
 - **GitHub 리포지토리**: `gitops/` 폴더의 `USERNAME`을 실제 GitHub 사용자명으로 변경
-- **이메일 주소**: `controllers/cert-manager/cluster-issuer.yaml`의 `YOUR_EMAIL`을 실제 이메일로 변경  
+- **이메일 주소**: `controllers/cert-manager/cluster-issuer.yaml`의 `YOUR_EMAIL`을 실제 이메일로 변경
 - **ACM 인증서**: `applications/smoke-test/hello-world.yaml`의 `YOUR_ACCOUNT_ID`, `YOUR_CERT_ID`를 실제 값으로 변경
 
 ## 📁 프로젝트 구조

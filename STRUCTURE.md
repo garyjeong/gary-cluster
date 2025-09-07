@@ -11,7 +11,8 @@ gary-cluster/
 ├── STRUCTURE.md                        # 프로젝트 구조 설명 (현재 파일)
 │
 ├── clusters/                           # EKS 클러스터 설정
-│   └── cluster-config.yaml             # eksctl 클러스터 생성 설정
+│   ├── cluster-config.yaml             # eksctl 클러스터 생성 설정 (복합)
+│   └── cluster-simple.yaml             # 간소화된 클러스터 설정 (실제 사용)
 │
 ├── controllers/                        # 쿠버네티스 컨트롤러 설정
 │   ├── aws-load-balancer/              # AWS Load Balancer Controller
@@ -55,10 +56,28 @@ gary-cluster/
 
 ### 클러스터 설정
 
-- **`clusters/cluster-config.yaml`**: EKS 클러스터 생성을 위한 eksctl 설정
+- **`clusters/cluster-config.yaml`**: EKS 클러스터 생성을 위한 eksctl 설정 (복합)
   - t4g.small SPOT 인스턴스 (ARM64)
   - IRSA 설정 (ALB Controller, ExternalDNS, cert-manager)
-  - 최소 비용 최적화 설정
+  - CloudWatch 로깅 등 고급 설정 포함
+  
+- **`clusters/cluster-simple.yaml`**: 간소화된 클러스터 설정 (실제 사용)
+  - 기본적인 설정만 포함
+  - 호환성 문제 해결을 위해 단순화
+  
+### 실제 적용된 방법 (2024.12.19)
+
+**클러스터 생성**:
+```bash
+# 간단한 CLI 명령어 사용 (복잡한 YAML 대신)
+eksctl create cluster --name gary-cluster --region ap-northeast-2 --nodes 1 --with-oidc
+```
+
+**노드 그룹 생성**:
+```bash  
+# AWS CLI 직접 사용 (eksctl CloudFormation 이슈로 인해)
+aws eks create-nodegroup --cluster-name gary-cluster --nodegroup-name gary-nodes-cli
+```
 
 ### 컨트롤러 설정
 
