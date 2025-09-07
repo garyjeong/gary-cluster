@@ -5,20 +5,41 @@
 ## ✅ **완료된 작업 요약** (2024년 12월 19일 기준)
 
 ### **클러스터 기본 구성**
-- ✅ **EKS 클러스터**: `gary-cluster` (v1.32, Seoul 리전)
-- ✅ **노드 그룹**: `gary-nodes-cli` (t3.small, 1노드, CREATING→ACTIVE 예정)
-- ✅ **VPC**: `vpc-01b88f5ef0e77510c` (3개 AZ, 6개 서브넷)
+
+- ✅ **EKS 클러스터**: `gary-cluster` (v1.32, Seoul 리전) - 재생성 완료
+- ✅ **노드 그룹**: `gary-nodes` (t3.small, 1노드, ACTIVE)
+- ✅ **VPC**: `vpc-0e812b43bb30b0201` (3개 AZ, 6개 서브넷) - 새 VPC
 - ✅ **IAM 역할**: `EKS-NodeGroup-Role` (필요 정책 모두 연결)
 - ✅ **kubeconfig**: 로컬 설정 완료
+- ✅ **RBAC 권한**: 문제 해결 완료
+- ✅ **시스템 애드온**: vpc-cni, coredns, kube-proxy, metrics-server 모두 실행
+
+### **컨트롤러 설치**
+
+- ✅ **AWS Load Balancer Controller**: 완전 설치 및 실행 (2/2 파드 Ready)
+- ✅ **IRSA 설정**: ALB Controller용 ServiceAccount 및 IAM Role 생성
+
+### **ECR 리포지토리**
+
+- ✅ **ECR 리포지토리 7개**: 모두 생성 완료
+  - hair-model-creator
+  - household-ledger
+  - gary-saju-service
+  - spark-prompt
+  - liview-backend
+  - react-wedding-invitation-letter
+  - liview-frontend
 
 ### **도구 및 환경**
+
 - ✅ **AWS CLI**: v2.x, 인증 완료
-- ✅ **eksctl**: v0.214.0-dev  
+- ✅ **eksctl**: v0.214.0-dev
 - ✅ **helm**: v3.18.6
 - ✅ **kubectl**: v1.32.2
 - ✅ **리전**: ap-northeast-2 (Seoul)
 
 ### **예상 월 비용**
+
 - **EKS Control Plane**: $72/월 ($0.10/시간)
 - **t3.small 노드**: ~$30/월 (온디맨드 기준)
 - **EBS 스토리지**: ~$2/월 (20GB)
@@ -34,19 +55,19 @@
 ### Phase 2: EKS 클러스터 생성 (최소 비용) ✅
 
 - [x] EKS 클러스터 구성 파일 생성
-- [x] 클러스터 생성 (Control Plane) 
+- [x] 클러스터 생성 (Control Plane)
   - [x] 옵션 선택: 기본 설정으로 클러스터 생성 (`gary-cluster`)
   - [x] 노드 그룹 생성: AWS CLI로 직접 생성 (`gary-nodes-cli`)
 - [x] kubeconfig 연결 및 접근 확인
 - [x] IAM 역할 생성 (EKS-NodeGroup-Role)
 
-### Phase 3: 네트워킹 및 Ingress 설정
+### Phase 3: 네트워킹 및 Ingress 설정 ✅
 
-- [ ] AWS Load Balancer Controller
-  - [ ] IAM 정책 JSON 생성
-  - [ ] IRSA (IAM Roles for Service Accounts) 설정
-  - [ ] Helm으로 Controller 설치
-  - [ ] 설치 확인 및 테스트
+- [x] AWS Load Balancer Controller
+  - [x] IAM 정책 JSON 생성
+  - [x] IRSA (IAM Roles for Service Accounts) 설정
+  - [x] Helm으로 Controller 설치
+  - [x] 설치 확인 및 테스트 (2/2 파드 Ready)
 - [ ] Route53 및 ExternalDNS
   - [ ] Route53 Hosted Zone 확인/생성
   - [ ] ExternalDNS용 IRSA 설정
@@ -61,18 +82,18 @@
 - [ ] 인증서 발급 확인
 - [ ] Ingress 어노테이션 TLS 설정
 
-### Phase 5: ECR 리포지토리 생성
+### Phase 5: ECR 리포지토리 생성 ✅
 
-- [ ] ECR 리포지토리 7개 생성
-  - [ ] hair-model-creator
-  - [ ] household-ledger
-  - [ ] gary-saju-service
-  - [ ] spark-prompt
-  - [ ] liview-backend
-  - [ ] react-wedding-invitation-letter
-  - [ ] liview-frontend
-- [ ] ECR 접근 권한 설정
-- [ ] 리포지토리 목록 검증 (`aws ecr describe-repositories`)
+- [x] ECR 리포지토리 7개 생성
+  - [x] hair-model-creator
+  - [x] household-ledger
+  - [x] gary-saju-service
+  - [x] spark-prompt
+  - [x] liview-backend
+  - [x] react-wedding-invitation-letter
+  - [x] liview-frontend
+- [x] ECR 접근 권한 설정 (기본 설정 완료)
+- [x] 리포지토리 목록 검증 (`aws ecr describe-repositories`)
 
 ### Phase 6: 스모크 테스트
 
@@ -117,4 +138,4 @@
 
 ---
 
-_마지막 업데이트: 2024년 12월 19일_
+_마지막 업데이트: 2025년 9월 7일_
