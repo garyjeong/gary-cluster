@@ -11,8 +11,10 @@ registry: txt
 txtOwnerId: gary-cluster
 
 serviceAccount:
-  create: false  # eksctl로 이미 생성됨  
+  create: true  # true로 변경
   name: external-dns
+  annotations:
+    eks.amazonaws.com/role-arn: arn:aws:iam::014125597282:role/EKS-ExternalDNS-Role
 
 # AWS 특정 설정
 aws:
@@ -28,10 +30,6 @@ resources:
   requests:
     cpu: 25m
     memory: 25Mi
-
-# 노드 선택자 (ARM64 노드 대응)
-nodeSelector:
-  kubernetes.io/arch: arm64
 
 # 로그 설정
 logLevel: info

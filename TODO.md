@@ -2,7 +2,7 @@
 
 ## 📋 프로젝트 진행 상태
 
-## ✅ **완료된 작업 요약** (2024년 12월 19일 기준)
+## ✅ **완료된 작업 요약** (2025년 9월 8일 기준)
 
 ### **클러스터 기본 구성**
 
@@ -43,7 +43,8 @@
 - **EKS Control Plane**: $72/월 ($0.10/시간)
 - **t3.small 노드**: ~$30/월 (온디맨드 기준)
 - **EBS 스토리지**: ~$2/월 (20GB)
-- **총 예상 비용**: **~$104/월** (개발 환경)
+- **Route53 Hosted Zone**: ~$0.50/월 (garyzone.pro)
+- **총 예상 비용**: **~$104.50/월** (개발 환경)
 
 ### Phase 1: 사전 준비 및 환경 점검 ✅
 
@@ -68,19 +69,21 @@
   - [x] IRSA (IAM Roles for Service Accounts) 설정
   - [x] Helm으로 Controller 설치
   - [x] 설치 확인 및 테스트 (2/2 파드 Ready)
-- [ ] Route53 및 ExternalDNS
-  - [ ] Route53 Hosted Zone 확인/생성
-  - [ ] ExternalDNS용 IRSA 설정
-  - [ ] ExternalDNS Helm 설치 (domainFilters=garyzone.pro)
-  - [ ] DNS 레코드 자동 생성 확인
+- [x] Route53 및 ExternalDNS
+  - [x] Route53 Hosted Zone 생성 (Z0394568WTSPBSC5SBHO)
+  - [x] ExternalDNS용 IRSA 설정 (EKS-ExternalDNS-Role)
+  - [x] ExternalDNS Helm 설치 (domainFilters=garyzone.pro)
+  - [x] DNS 레코드 자동 생성 확인
 
-### Phase 4: TLS 인증서 설정
+### Phase 4: TLS 인증서 설정 🔄
 
-- [ ] 방법 선택
-  - [ ] (기본) ACM 와일드카드 인증서 발급
-  - [ ] (대안) cert-manager + DNS-01(Route53) ClusterIssuer
-- [ ] 인증서 발급 확인
-- [ ] Ingress 어노테이션 TLS 설정
+- [x] 방법 선택
+  - [ ] ~~(기본) ACM 와일드카드 인증서 발급~~
+  - [x] **(선택됨)** cert-manager + DNS-01(Route53) ClusterIssuer
+- [x] cert-manager Helm 설치 (부분 완료 - 트러블슈팅 중)
+- [x] ClusterIssuer 생성 (letsencrypt-prod, letsencrypt-staging)
+- [ ] 인증서 자동 발급 확인
+- [x] Ingress 어노테이션 TLS 설정 (cert-manager 방식으로 변경)
 
 ### Phase 5: ECR 리포지토리 생성 ✅
 
@@ -95,13 +98,14 @@
 - [x] ECR 접근 권한 설정 (기본 설정 완료)
 - [x] 리포지토리 목록 검증 (`aws ecr describe-repositories`)
 
-### Phase 6: 스모크 테스트
+### Phase 6: 스모크 테스트 🔄
 
-- [ ] Nginx 테스트 애플리케이션 배포
-- [ ] Ingress 설정 (hello.dev.garyzone.pro)
+- [x] 네임스페이스 생성 (dev, prod, gary-apps)
+- [x] Hello World 테스트 애플리케이션 배포
+- [x] Ingress 설정 (hello.dev.garyzone.pro) - cert-manager 연동
 - [ ] DNS 자동 레코드 생성 확인
 - [ ] HTTPS 접근 확인 (브라우저 테스트)
-- [ ] SSL 인증서 유효성 검증
+- [ ] SSL 인증서 유효성 검증 (Let's Encrypt)
 
 ### Phase 7: GitOps 준비 (Argo CD)
 
@@ -138,4 +142,4 @@
 
 ---
 
-_마지막 업데이트: 2025년 9월 7일_
+_마지막 업데이트: 2025년 9월 8일_

@@ -9,7 +9,7 @@
 - **컨테이너 레지스트리 통합** (ECR 7개 리포지토리)
 - **GitOps 기반 배포** (Argo CD App-of-Apps)
 
-## 📊 **현재 구축 상태** (2025.09.07)
+## 📊 **현재 구축 상태** (2025.09.08)
 
 ### ✅ **완료된 구성요소**
 
@@ -20,13 +20,21 @@
 - **kubeconfig**: 로컬 설정 완료
 - **AWS Load Balancer Controller**: 완전 설치 및 실행 중 (2/2 파드)
 - **ECR 리포지토리**: 7개 모두 생성 완료
-- **RBAC 권한**: 문제 해결 완료
+- **Route53 Hosted Zone**: `garyzone.pro` (Z0394568WTSPBSC5SBHO) 생성 완료
+- **ExternalDNS**: 설치 완료 및 정상 작동 중 (garyzone.pro 연동)
+- **IRSA 설정**: ExternalDNS용 IAM 역할 및 정책 구성 완료
+- **네임스페이스**: dev, prod, gary-apps 생성 완료
+- **스모크 테스트 애플리케이션**: hello-world 배포 완료
 
-### 🔄 **다음 단계**
+### 🔄 **진행 중인 작업**
 
-- ExternalDNS 설치 (garyzone.pro 연동)
-- TLS 인증서 설정 (ACM 또는 cert-manager)
-- 스모크 테스트 (hello.dev.garyzone.pro)
+- **cert-manager**: 설치 진행 중 (일부 구성요소 누락으로 트러블슈팅 중)
+- **TLS 인증서**: cert-manager를 통한 자동 발급 설정 진행 중
+
+### 🎯 **다음 단계**
+
+- cert-manager 설치 완료
+- TLS 인증서 자동 발급 확인 (hello.dev.garyzone.pro)
 - GitOps 설정 (Argo CD)
 
 ## 🏗️ 아키텍처 개요
@@ -79,9 +87,10 @@
 ### 리소스 사양 (실제 구성 기준)
 
 - **EKS Control Plane**: $0.10/hour ($72/월)
-- **Worker Node**: t3.small (2 vCPU, 2GB RAM) 온디맨드
-- **스토리지**: 기본 EBS 볼륨
-- **실제 월 비용**: ~$104/월 (개발 환경)
+- **Worker Node**: t3.small (2 vCPU, 2GB RAM) 온디맨드, 1대
+- **Route53 Hosted Zone**: garyzone.pro ($0.50/월)
+- **스토리지**: 기본 EBS 볼륨 20GB
+- **실제 월 비용**: ~$104.50/월 (개발 환경)
 
 ### 비용 절약 방법
 
@@ -144,8 +153,8 @@ aws eks create-nodegroup \
 사용 전 다음 설정들을 실제 값으로 변경해주세요:
 
 - **GitHub 리포지토리**: `gitops/` 폴더의 `USERNAME`을 실제 GitHub 사용자명으로 변경
-- **이메일 주소**: `controllers/cert-manager/cluster-issuer.yaml`의 `YOUR_EMAIL`을 실제 이메일로 변경
-- **ACM 인증서**: `applications/smoke-test/hello-world.yaml`의 `YOUR_ACCOUNT_ID`, `YOUR_CERT_ID`를 실제 값으로 변경
+- **이메일 주소**: `controllers/cert-manager/cluster-issuer.yaml`의 `YOUR_EMAIL`을 실제 이메일로 변경 ✅ **완료**
+- ~~**ACM 인증서**: `applications/smoke-test/hello-world.yaml`의 `YOUR_ACCOUNT_ID`, `YOUR_CERT_ID`를 실제 값으로 변경~~ **→ cert-manager 자동 발급으로 대체**
 
 ## 📁 프로젝트 구조
 

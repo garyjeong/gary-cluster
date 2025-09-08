@@ -60,38 +60,51 @@ gary-cluster/
   - t4g.small SPOT 인스턴스 (ARM64)
   - IRSA 설정 (ALB Controller, ExternalDNS, cert-manager)
   - CloudWatch 로깅 등 고급 설정 포함
-  
 - **`clusters/cluster-simple.yaml`**: 간소화된 클러스터 설정 (실제 사용)
   - 기본적인 설정만 포함
   - 호환성 문제 해결을 위해 단순화
-  
-### 실제 적용된 방법 (2024.12.19)
+
+### 실제 적용된 방법 (2025.09.08)
 
 **클러스터 생성**:
+
 ```bash
-# 간단한 CLI 명령어 사용 (복잡한 YAML 대신)
-eksctl create cluster --name gary-cluster --region ap-northeast-2 --nodes 1 --with-oidc
+# EKS 클러스터 생성 (Control Plane + OIDC)
+eksctl create cluster \
+  --name gary-cluster \
+  --region ap-northeast-2 \
+  --version 1.32 \
+  --with-oidc \
+  --without-nodegroup
 ```
 
 **노드 그룹 생성**:
-```bash  
-# AWS CLI 직접 사용 (eksctl CloudFormation 이슈로 인해)
-aws eks create-nodegroup --cluster-name gary-cluster --nodegroup-name gary-nodes-cli
+
+```bash
+# AWS CLI로 노드 그룹 직접 생성
+aws eks create-nodegroup \
+  --cluster-name gary-cluster \
+  --nodegroup-name gary-nodes \
+  --subnets subnet-xxx subnet-yyy subnet-zzz \
+  --node-role arn:aws:iam::ACCOUNT:role/EKS-NodeGroup-Role \
+  --instance-types t3.small \
+  --scaling-config minSize=0,maxSize=2,desiredSize=1
 ```
 
 ### 컨트롤러 설정
 
-- **`controllers/aws-load-balancer/values.yaml`**: ALB Controller Helm 설정
-- **`controllers/external-dns/values.yaml`**: ExternalDNS 설정 (garyzone.pro)
-- **`controllers/cert-manager/`**: TLS 인증서 자동 관리
-  - `values.yaml`: cert-manager Helm 설정
-  - `cluster-issuer.yaml`: Let's Encrypt ClusterIssuer
+- **`controllers/aws-load-balancer/values.yaml`**: ALB Controller Helm 설정 ✅ **설치 완료**
+- **`controllers/external-dns/values.yaml`**: ExternalDNS 설정 (garyzone.pro) ✅ **설치 완료**
+- **`controllers/cert-manager/`**: TLS 인증서 자동 관리 🔄 **설치 진행 중**
+  - `values.yaml`: cert-manager Helm 설정 (nodeSelector 제거됨)
+  - `cluster-issuer.yaml`: Let's Encrypt ClusterIssuer (생성 완료)
 
 ### 애플리케이션
 
-- **`applications/namespaces/environments.yaml`**: 환경별 네임스페이스
-- **`applications/smoke-test/hello-world.yaml`**: 테스트용 애플리케이션
-  - hello.dev.garyzone.pro 도메인으로 접근 가능
+- **`applications/namespaces/environments.yaml`**: 환경별 네임스페이스 ✅ **생성 완료** (dev, prod, gary-apps)
+- **`applications/smoke-test/hello-world.yaml`**: 테스트용 애플리케이션 ✅ **배포 완료**
+  - hello.dev.garyzone.pro 도메인으로 접근 설정
+  - cert-manager를 통한 자동 TLS 인증서 발급 설정
 
 ### GitOps 설정
 
@@ -111,19 +124,27 @@ aws eks create-nodegroup --cluster-name gary-cluster --nodegroup-name gary-nodes
 
 ## 🚀 사용 워크플로
 
-### 1. 초기 설정
+### 1. 초기 설정 (실제 적용된 순서)
 
 ```bash
 # 1. 클러스터 생성
-eksctl create cluster -f clusters/cluster-config.yaml
+eksctl create cluster --name gary-cluster --region ap-northeast-2 --version 1.32 --with-oidc --without-nodegroup
 
-# 2. 컨트롤러 설치
+# 2. Route53 Hosted Zone 생성
+aws route53 create-hosted-zone --name garyzone.pro --caller-reference gary-cluster-20250908
+
+# 3. AWS Load Balancer Controller 설치
 helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
   -f controllers/aws-load-balancer/values.yaml -n kube-system
 
-# 3. ExternalDNS 설치
-helm install external-dns bitnami/external-dns \
+# 4. ExternalDNS 설치 (IRSA 설정 포함)
+helm install external-dns external-dns/external-dns \
   -f controllers/external-dns/values.yaml -n kube-system
+
+# 5. cert-manager 설치
+helm install cert-manager jetstack/cert-manager \
+  --namespace cert-manager --values controllers/cert-manager/values.yaml
+kubectl apply -f controllers/cert-manager/cluster-issuer.yaml
 ```
 
 ### 2. 일상 운영
@@ -167,10 +188,17 @@ kubectl apply -f gitops/app-of-apps/root-app.yaml
 
 ## 💰 비용 최적화
 
-- **SPOT 인스턴스**: 최대 90% 할인
-- **노드 스케일링**: 미사용 시 0대로 스케일 다운
+- **온디맨드 인스턴스**: t3.small 사용 (현재 구성)
+- **노드 스케일링**: 미사용 시 0대로 스케일 다운 (`kubectl scale` 또는 `eksctl scale`)
 - **리소스 제한**: 모든 파드에 적절한 리소스 제한 설정
+- **파드 개수 최적화**: CoreDNS 등 시스템 컴포넌트 replicas 최소화 (1개)
 - **Life cycle 정책**: ECR 이미지 자동 정리
+
+## 🔧 해결된 주요 이슈
+
+- **파드 스케줄링 오류**: `nodeSelector: kubernetes.io/arch=arm64` 제거 (x86 노드와 불일치)
+- **파드 용량 한계**: t3.small 최대 11개 파드 제한, CoreDNS replica 축소로 해결
+- **cert-manager 설치 이슈**: Helm values.yaml 스키마 불일치 해결
 
 ---
 

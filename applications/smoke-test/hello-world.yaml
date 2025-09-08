@@ -72,7 +72,7 @@ metadata:
     kubernetes.io/ingress.class: alb
     alb.ingress.kubernetes.io/scheme: internet-facing
     alb.ingress.kubernetes.io/target-type: ip
-    alb.ingress.kubernetes.io/certificate-arn: "arn:aws:acm:ap-northeast-2:YOUR_ACCOUNT_ID:certificate/YOUR_CERT_ID"
+    cert-manager.io/cluster-issuer: letsencrypt-prod
     alb.ingress.kubernetes.io/ssl-redirect: "443"
     alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS":443}]'
     external-dns.alpha.kubernetes.io/hostname: hello.dev.garyzone.pro
@@ -90,3 +90,7 @@ spec:
             name: hello-world-service
             port:
               number: 80
+  tls:
+  - hosts:
+    - hello.dev.garyzone.pro
+    secretName: hello-world-tls

@@ -32,21 +32,6 @@ cainjector:
       cpu: 50m
       memory: 64Mi
 
-# 노드 선택자 (ARM64 노드 대응)
-nodeSelector:
-  kubernetes.io/arch: arm64
-
-webhook:
-  nodeSelector:
-    kubernetes.io/arch: arm64
-
-cainjector:
-  nodeSelector:
-    kubernetes.io/arch: arm64
-
-# 로그 레벨
-logLevel: 2
-
 # Prometheus 메트릭
 prometheus:
   enabled: true
