@@ -11,7 +11,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: https://github.com/USERNAME/gary-cluster.git  # 실제 GitHub 사용자명으로 변경
+    repoURL: https://github.com/gary/gary-cluster.git  # GitHub 사용자명 설정
     targetRevision: HEAD
     path: gitops/applications
   destination:
