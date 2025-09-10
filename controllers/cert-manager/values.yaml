@@ -2,7 +2,7 @@
 installCRDs: true
 
 serviceAccount:
-  create: false  # eksctl로 이미 생성됨
+  create: true  # ServiceAccount 생성
   name: cert-manager
 
 # 리소스 제한 (비용 최적화)
