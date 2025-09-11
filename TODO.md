@@ -107,7 +107,7 @@
 - [x] 네임스페이스 생성 (dev, prod, gary-apps)
 - [x] Hello World 테스트 애플리케이션 배포 (삭제됨)
 - [x] Ingress 설정 (hello.dev.garyzone.pro) - cert-manager 연동
-- [ ] DNS 자동 레코드 생성 확인
+- [x] DNS 자동 레코드 생성 확인 (Route53 A/AAAA Alias)
 - [ ] HTTPS 접근 확인 (브라우저 테스트)
 - [ ] SSL 인증서 유효성 검증 (Let's Encrypt)
 
@@ -158,7 +158,7 @@
 ### 우선순위 3: 클러스터 상태 점검
 
 - [ ] 전체 파드 상태 확인 (현재 t3.small 11개 파드 제한)
-- [ ] cert-manager TLS 인증서 발급 진행 상황
+- [ ] cert-manager TLS 인증서 발급 진행 상황 (staging → prod 전환)
 - [ ] hello-world 애플리케이션 삭제 반영 여부
 - [ ] 파드 공간 부족 문제 해결 (노드 추가 or 불필요 파드 정리)
 
@@ -205,4 +205,4 @@
 3. ECR 리포지토리 생성 계획 수립
 4. cert-manager TLS 인증서 발급 상태 확인
 
-_마지막 업데이트: 2025년 9월 11일 (AWS 자격 증명 재설정 및 ECR 상태 점검 완료)_
+**마지막 업데이트:** 2025년 9월 11일 (ALB/ExternalDNS 구성 및 NS 위임 가이드 반영)

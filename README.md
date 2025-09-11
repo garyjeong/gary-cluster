@@ -39,7 +39,7 @@
 
 ## 🏗️ 아키텍처 개요
 
-```
+````text
 ┌─────────────────────────────────────────────────────────────┐
 │                    Internet                                  │
 │                       │                                     │
@@ -71,7 +71,7 @@
 │ │  Node: t4g.small (Graviton/ARM64) + SPOT               │ │
 │ └─────────────────────────────────────────────────────────┘ │
 └─────────────────────────────────────────────────────────────┘
-```
+```text
 
 ## 📋 환경 정보
 
@@ -100,7 +100,7 @@ aws eks update-nodegroup-config --cluster-name gary-cluster --nodegroup-name gar
 
 # 필요할 때 노드를 1대로 확장
 aws eks update-nodegroup-config --cluster-name gary-cluster --nodegroup-name gary-nodes --scaling-config minSize=0,maxSize=2,desiredSize=1
-```
+```bash
 
 ## 🚀 빠른 시작
 
@@ -115,7 +115,7 @@ aws configure
 
 # 권한 확인
 aws sts get-caller-identity
-```
+````
 
 ### 2. 클러스터 생성
 
@@ -215,6 +215,43 @@ kubectl get svc -A
 aws eks describe-cluster --name gary-cluster
 aws ec2 describe-instances --filters "Name=tag:eks:cluster-name,Values=gary-cluster"
 ```
+
+## 🌐 도메인/네임서버 안내 (service-status)
+
+- 서비스 상태 페이지 도메인: `service-status.garyzone.pro`
+- 현재 Ingress가 생성되면 ALB가 할당됩니다. 예시:
+  - Ingress LB: `k8s-dev-services-b29f9e82ee-1928776017.ap-northeast-2.elb.amazonaws.com`
+- ExternalDNS가 Route53에 A/AAAA Alias를 자동 생성합니다.
+
+### 등록기관 네임서버 변경(권장)
+
+도메인을 등록한 곳(예: ksdom)에서 네임서버(NS)를 Route53로 위임하세요.
+
+- ns-332.awsdns-41.com
+- ns-591.awsdns-09.net
+- ns-1754.awsdns-27.co.uk
+- ns-1386.awsdns-45.org
+
+검증:
+
+```bash
+dig NS garyzone.pro +short
+dig +short service-status.garyzone.pro
+# 또는 권한 있는 Route53 NS로 직접 조회
+dig +short service-status.garyzone.pro @ns-332.awsdns-41.com
+```
+
+### 임시 우회(네임서버 변경이 어려운 경우)
+
+등록기관 DNS에서 `service-status.garyzone.pro`의 CNAME을 ALB 호스트명으로 직접 설정합니다.
+
+- CNAME: `service-status.garyzone.pro` → `<Ingress ALB 호스트명>`
+
+전파 후 HTTPS(TLS)를 활성화하면 됩니다.
+
+### GitOps 반영
+
+현재 `service-status` Ingress는 임시로 `kubectl apply`로 생성되었습니다. 추후 `applications/ingress/` 경로에 매니페스트를 추가해 GitOps로 관리할 예정입니다.
 
 ## 📦 ECR 리포지토리 목록
 

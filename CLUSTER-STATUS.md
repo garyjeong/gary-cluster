@@ -21,7 +21,7 @@
 
 ### EKS 클러스터 정보
 
-```
+````text
 클러스터명: gary-cluster
 Kubernetes 버전: v1.32.8-eks-99d6cc0
 리전: ap-northeast-2 (Seoul)
@@ -29,14 +29,22 @@ Kubernetes 버전: v1.32.8-eks-99d6cc0
 인스턴스 타입: t3.small (2 vCPU, 2GB RAM)
 아키텍처: amd64
 상태: Ready (2d23h)
-```
+```text
 
 ### 네트워킹 및 DNS
 
-```
+```bash
 VPC: vpc-0e812b43bb30b0201 (3 AZ, 6 서브넷)
 Route53 호스팅 존: garyzone.pro (Z0394568WTSPBSC5SBHO)
-도메인 관리: ExternalDNS 연동 완료
+도메인 관리: ExternalDNS 연동 완료 (Route53)
+ALB/Ingress 상태:
+````
+
+Ingress(dev/service-status-ingress): k8s-dev-services-b29f9e82ee-1928776017.ap-northeast-2.elb.amazonaws.com
+Route53: A/AAAA Alias → 위 ALB 호스트명
+권장: 등록기관(NS)을 Route53 NS로 위임하여 전 세계 조회 일치
+
+```bash
 로드밸런서: AWS Load Balancer Controller 가동
 ```
 

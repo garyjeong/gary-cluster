@@ -340,8 +340,8 @@ kubectl get certificates -A
 
 ### ⏳ 진행 중
 
-- **TLS 인증서 발급**: DNS 전파 대기 중
-- **GitOps 설정**: Argo CD 설치 예정
+- **TLS 인증서 발급**: staging 완료 후 prod 전환 예정
+- **GitOps 설정**: Argo CD 설치 완료(최소 구성)
 
 ### 🔍 주요 해결된 문제들
 
@@ -472,7 +472,7 @@ kubectl apply -f gitops/app-of-apps/root-app.yaml
 
 **📅 작성일**: 2025년 9월 10일  
 **👤 작성자**: Gary  
-**🔄 최종 업데이트**: EKS 접근 권한 설정(Access Entry/`aws-auth` 스크립트) 가이드 추가
+**🔄 최종 업데이트**: 도메인(NS) 위임 및 ALB/ExternalDNS 동작 가이드 추가
 
 ---
 
