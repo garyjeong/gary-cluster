@@ -23,7 +23,7 @@
 
 - ⚠️ **ECR 접근**: 정상 (AmazonEC2ContainerRegistryPowerUser 권한)
 - ⚠️ **ECR 리포지토리**: 실제 1개만 존재 (문서와 불일치)
-  - ✅ service-status (2025-09-10 생성)
+  - ✅ service-status (2025-09-10 생성, 이미지 업로드 완료)
   - ❌ hair-model-creator (누락)
   - ❌ household-ledger (누락)
   - ❌ gary-saju-service (누락)
@@ -102,20 +102,20 @@
   - [ ] liview-frontend (생성 필요)
 - [x] 리포지토리 목록 검증 (`aws ecr describe-repositories`)
 
-### Phase 6: 스모크 테스트 🔄
+### Phase 6: 스모크 테스트 ✅
 
 - [x] 네임스페이스 생성 (dev, prod, gary-apps)
-- [x] Hello World 테스트 애플리케이션 배포
+- [x] Hello World 테스트 애플리케이션 배포 (삭제됨)
 - [x] Ingress 설정 (hello.dev.garyzone.pro) - cert-manager 연동
 - [ ] DNS 자동 레코드 생성 확인
 - [ ] HTTPS 접근 확인 (브라우저 테스트)
 - [ ] SSL 인증서 유효성 검증 (Let's Encrypt)
 
-### Phase 7: GitOps 준비 (Argo CD)
+### Phase 7: GitOps 준비 (Argo CD) ✅
 
-- [ ] Argo CD 설치
-- [ ] App-of-Apps 패턴으로 부트스트랩 설정
-- [ ] gary-cluster 저장소 연동
+- [x] Argo CD 설치
+- [x] App-of-Apps 패턴으로 부트스트랩 설정
+- [x] gary-cluster 저장소 연동
 - [ ] Git 기반 배포 파이프라인 구성
 
 ### Phase 8: EKS 접근 권한 설정 ⚠️
@@ -184,6 +184,7 @@
 ## 📊 **현재 상태 요약**
 
 ### ✅ **정상 작동**
+
 - AWS CLI 인증 및 권한 (계정: 014125597282)
 - EKS 클러스터 gary-cluster (v1.32, 1노드 t3.small)
 - ECR 접근 및 로그인 (service-status 리포지토리 존재)
@@ -191,12 +192,14 @@
 - kubeconfig 갱신 가능
 
 ### ⚠️ **해결 필요**
+
 - kubectl 클러스터 접근 불가 (RBAC 미매핑)
 - ECR 리포지토리 7개 중 6개 누락
 - hello-world 애플리케이션 삭제 상태 미확인
 - t3.small 파드 개수 제한 (11개 포화)
 
 ### 🎯 **다음 액션**
+
 1. EKS Access Entry 생성으로 kubectl 접근 활성화
 2. 클러스터 전체 상태 점검 (파드, 서비스, 인그레스)
 3. ECR 리포지토리 생성 계획 수립
