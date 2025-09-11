@@ -181,7 +181,8 @@ gary-cluster/
 └── scripts/                   # 유틸리티 스크립트
     ├── cluster-up.sh         # 클러스터 시작
     ├── cluster-down.sh       # 클러스터 중지
-    └── cost-report.sh        # 비용 리포트
+    ├── cost-report.sh        # 비용 리포트
+    └── update-aws-auth.sh    # aws-auth ConfigMap 매핑 스크립트
 ```
 
 ## 🔧 운영 가이드
@@ -247,6 +248,25 @@ docker push $ACCOUNT_ID.dkr.ecr.ap-northeast-2.amazonaws.com/hair-model-creator:
 - AWS Load Balancer Controller용 역할
 - ExternalDNS용 Route53 접근 역할
 - cert-manager용 Route53 DNS-01 역할
+
+### EKS 접근 권한 설정 (kubectl 접속)
+
+- 권장: EKS Access Entry 사용 (콘솔 → EKS → 클러스터 → Access → Grant access)
+  - Principal: kubectl 사용 주체 ARN (User/Role)
+  - Access policy: Admin(Cluster) 또는 최소 권한
+  - Access scope: Cluster
+- 대안: aws-auth ConfigMap 매핑 스크립트 사용
+  - `scripts/update-aws-auth.sh`로 안전/반복 가능 업데이트
+  - 예시:
+    ```bash
+    ./scripts/update-aws-auth.sh \
+      --cluster gary-cluster \
+      --region ap-northeast-2 \
+      --roles arn:aws:iam::014125597282:role/EKS-ClusterAdmin \
+      --users arn:aws:iam::014125597282:user/gary-wemeet-macbook \
+      --group system:masters
+    ```
+  - kubeconfig 갱신 최소 권한: `eks:DescribeCluster`, `eks:ListClusters`
 
 ### 네트워크 보안
 

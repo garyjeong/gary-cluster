@@ -472,4 +472,31 @@ kubectl apply -f gitops/app-of-apps/root-app.yaml
 
 **📅 작성일**: 2025년 9월 10일  
 **👤 작성자**: Gary  
-**🔄 최종 업데이트**: cert-manager TLS 자동 발급 설정 완료
+**🔄 최종 업데이트**: EKS 접근 권한 설정(Access Entry/`aws-auth` 스크립트) 가이드 추가
+
+---
+
+## 🔐 부록: kubectl 접근 권한 설정 가이드
+
+### A. EKS Access Entry (권장)
+
+콘솔 경로: EKS → 클러스터 → Access → Grant access
+
+- Principal: 접근시킬 IAM User/Role ARN
+- Access policy: Admin(Cluster) 또는 최소 권한
+- Access scope: Cluster
+
+### B. aws-auth ConfigMap (대안, 스크립트 제공)
+
+스크립트: `scripts/update-aws-auth.sh` (자동 백업 + idempotent)
+
+```bash
+./scripts/update-aws-auth.sh \
+  --cluster gary-cluster \
+  --region ap-northeast-2 \
+  --roles arn:aws:iam::014125597282:role/EKS-ClusterAdmin \
+  --users arn:aws:iam::014125597282:user/gary-wemeet-macbook \
+  --group system:masters
+```
+
+여러 위치에서 접근이 필요한 경우에는 공유 역할을 생성하여 신뢰 정책에 외부 계정/Organization을 허용한 뒤, 그 역할 ARN을 Access Entry 또는 aws-auth에 등록합니다.

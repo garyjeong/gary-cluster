@@ -286,3 +286,19 @@ dig _acme-challenge.hello.dev.garyzone.pro TXT +short
 **⏰ 마지막 업데이트**: 20:50 KST  
 **📊 클러스터 상태**: 핵심 인프라 100% 가동, 파드 제한으로 확장 제약  
 **🎯 다음 목표**: TLS 인증서 발급 완료 및 스모크 테스트 성공
+
+## 🔐 접근 권한 업데이트 (2025-09-11)
+
+- AWS CLI 자격 증명 재설정 후, `eks:DescribeCluster` 권한 부재로 kubeconfig 갱신 실패 → 인라인 정책으로 `eks:DescribeCluster`, `eks:ListClusters` 허용하여 해결
+- kubectl 인증 문제는 클러스터 RBAC 미매핑이 원인 → 다음 중 하나로 해결 가능:
+  - 권장: EKS Access Entry에서 Principal(사용자/역할)에 Admin(Cluster) 부여
+  - 대안: `aws-auth` ConfigMap에 사용자/역할 매핑. 제공 스크립트 사용:
+    ```bash
+    ./scripts/update-aws-auth.sh \
+      --cluster gary-cluster \
+      --region ap-northeast-2 \
+      --roles arn:aws:iam::014125597282:role/EKS-ClusterAdmin \
+      --users arn:aws:iam::014125597282:user/gary-wemeet-macbook \
+      --group system:masters
+    ```
+  - 여러 위치에서 접근 필요 시: 공유 역할을 생성하고 신뢰 정책에 외부 계정/Organization을 허용한 뒤, 그 역할 ARN을 Access Entry 또는 aws-auth에 등록
