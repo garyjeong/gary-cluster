@@ -1,27 +1,9 @@
-# 환경별 네임스페이스 정의
+# 네임스페이스 정의 (단일)
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: dev
+  name: gary-app
   labels:
-    name: dev
-    environment: development
-    managed-by: argocd
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: prod
-  labels:
-    name: prod
-    environment: production
-    managed-by: argocd
----
-apiVersion: v1
-kind: Namespace
-metadata:
-  name: gary-apps
-  labels:
-    name: gary-apps
+    name: gary-app
     purpose: applications
     managed-by: argocd

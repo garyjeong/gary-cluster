@@ -1,4 +1,4 @@
-# 네임스페이스 관리 애플리케이션
+# 네임스페이스 관리 애플리케이션 (단일 네임스페이스 gary-app)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -14,7 +14,7 @@ spec:
     path: applications/namespaces
   destination:
     server: https://kubernetes.default.svc
-    namespace: default
+    namespace: gary-app
   syncPolicy:
     automated:
       prune: true
@@ -28,64 +28,4 @@ spec:
         factor: 2
         maxDuration: 3m
 
----
-# 스모크 테스트 애플리케이션
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: smoke-test
-  namespace: argocd
-  labels:
-    app.kubernetes.io/name: smoke-test
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/gary/gary-cluster.git  # GitHub 사용자명 설정
-    targetRevision: HEAD
-    path: applications/smoke-test
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: dev
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
-
----
-# Gary Apps 애플리케이션들
-apiVersion: argoproj.io/v1alpha1
-kind: Application
-metadata:
-  name: gary-apps-dev
-  namespace: argocd
-  labels:
-    app.kubernetes.io/name: gary-apps-dev
-spec:
-  project: default
-  source:
-    repoURL: https://github.com/gary/gary-cluster.git  # GitHub 사용자명 설정
-    targetRevision: HEAD
-    path: environments/dev
-  destination:
-    server: https://kubernetes.default.svc
-    namespace: gary-apps
-  syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
-    syncOptions:
-      - CreateNamespace=true
-    retry:
-      limit: 5
-      backoff:
-        duration: 5s
-        factor: 2
-        maxDuration: 3m
+# 불필요한 dev/prod/gary-apps 애플리케이션 정의 제거

@@ -1,0 +1,73 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: service-status
+  namespace: gary-app
+  labels:
+    app: service-status
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: service-status
+  template:
+    metadata:
+      labels:
+        app: service-status
+    spec:
+      containers:
+      - name: service-status
+        image: 014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/service-status:latest
+        ports:
+        - containerPort: 80
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 50m
+            memory: 64Mi
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: service-status-service
+  namespace: gary-app
+  labels:
+    app: service-status
+spec:
+  selector:
+    app: service-status
+  ports:
+  - port: 80
+    targetPort: 80
+    protocol: TCP
+  type: ClusterIP
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: service-status-ingress
+  namespace: gary-app
+  labels:
+    app: service-status
+  annotations:
+    kubernetes.io/ingress.class: alb
+    alb.ingress.kubernetes.io/scheme: internet-facing
+    alb.ingress.kubernetes.io/target-type: ip
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80}]'
+    external-dns.alpha.kubernetes.io/hostname: service-status.garyzone.pro
+spec:
+  rules:
+  - host: service-status.garyzone.pro
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: service-status-service
+            port:
+              number: 80

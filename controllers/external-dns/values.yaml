@@ -2,6 +2,7 @@
 provider: aws
 domainFilters:
   - garyzone.pro
+  - garyzone.ai
 
 sources:
   - ingress
