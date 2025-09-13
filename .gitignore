@@ -1,0 +1,25 @@
+# 로그 파일
+*.log
+
+# Playwright 스크린샷
+.playwright-mcp/
+
+# 임시 파일
+*.tmp
+*.temp
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/
+
+# 환경 변수
+.env
+.env.local
+.env.production
+
+# Kubernetes 임시 파일
+*.yaml.bak
+*.yml.bak
