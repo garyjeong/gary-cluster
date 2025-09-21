@@ -1,0 +1,5 @@
+# gitops/applications/household-ledger/namespace.yaml
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: household-ledger

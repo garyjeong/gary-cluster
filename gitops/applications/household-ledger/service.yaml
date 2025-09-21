@@ -1,0 +1,14 @@
+# gitops/applications/household-ledger/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: household-ledger-service
+  namespace: household-ledger
+spec:
+  selector:
+    app: household-ledger
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000
+  type: NodePort
