@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   name: service-status
   namespace: gary-app
+  annotations:
+    argocd-image-updater.argoproj.io/image-list: service-status=014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/service-status:latest
+    argocd-image-updater.argoproj.io/service-status.update-strategy: latest
   labels:
     app: service-status
 spec:

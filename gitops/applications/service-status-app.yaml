@@ -1,0 +1,21 @@
+# gitops/applications/service-status-app.yaml
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: service-status
+  namespace: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/gary/gary-cluster.git'
+    path: applications/service-status
+    targetRevision: HEAD
+  destination:
+    server: 'https://kubernetes.default.svc'
+    namespace: gary-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
