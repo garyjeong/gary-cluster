@@ -3,7 +3,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: household-ledger
-  namespace: household-ledger
+  namespace: gary-app
   labels:
     app: household-ledger
 spec:
@@ -33,7 +33,7 @@ spec:
                   name: household-ledger-secrets
                   key: nextauth-secret
             - name: NEXTAUTH_URL
-              value: "https://ledger.garyzone.pro" # Change to your domain
+              value: "https://household-ledger.garyzone.pro"
             - name: GOOGLE_CLIENT_ID
               valueFrom:
                 secretKeyRef:
