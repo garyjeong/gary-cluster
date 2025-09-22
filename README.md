@@ -1,3 +1,35 @@
+# 운영 요약 (2025-09-22)
+
+- 접속 정보
+  - Argo CD: https://argocd.garyzone.pro
+  - 최초 로그인: `admin` / `argocd admin initial-password -n argocd`
+- HTTPS/TLS
+  - ALB + ACM 와일드카드 인증서 사용(`*.garyzone.pro`, `garyzone.pro`, ap-northeast-2)
+  - Ingress 예시 주석:
+    ```yaml
+    metadata:
+      annotations:
+        alb.ingress.kubernetes.io/listen-ports: '[{"HTTP":80},{"HTTPS":443}]'
+        alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type":"redirect","RedirectConfig":{"Protocol":"HTTPS","Port":"443","StatusCode":"HTTP_301"}}'
+        alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:014125597282:certificate/1249ba8a-b4bc-4254-bfda-f48d1c936d9e
+    ```
+- GitOps
+  - App-of-Apps(`gitops/app-of-apps/root-app.yaml`)로 `gitops/applications`의 앱 자동 관리
+  - 리포지토리 소유자: `github.com/garyjeong/gary-cluster`
+  - 변경 후 동기화 강제: `kubectl annotate application <app> -n argocd argocd.argoproj.io/refresh=hard --overwrite`
+- DNS
+  - Route53 Hosted Zone: `garyzone.pro`
+  - 등록기관 NS가 Route53 NS와 동일해야 함
+- 서비스 현황
+  - `argocd` UI: HTTPS 활성(80→443 리다이렉트)
+  - `service-status`: 동기화 정상, Ingress/ALB 노출(HTTPS 적용 시 동일한 ACM ARN 사용 가능)
+- 트러블슈팅 단축키
+  - ALB 주소 확인: `kubectl get ing -A -o wide`
+  - ExternalDNS 로그: `kubectl -n kube-system logs deploy/external-dns --tail=200`
+  - ArgoCD 서버 재시작: `kubectl delete pod -n argocd -l app.kubernetes.io/name=argocd-server`
+
+---
+
 # gary-cluster: EKS 최소비용 구축 + GitOps
 
 최소 비용으로 AWS EKS 클러스터를 구축하고, 도메인 연결, ECR 통합, GitOps 파이프라인을 구현하는 프로젝트입니다.

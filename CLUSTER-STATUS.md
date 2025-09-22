@@ -1,3 +1,18 @@
+# 오늘 작업 요약 (2025-09-22)
+
+- Argo CD 재설치 및 정상화: 모든 컴포넌트 Running
+- EKS 노드 확장: 새 노드그룹 `gary-nodes-large`(t3.large) 추가, 기존 `t3.small` 노드그룹 제거
+- 네트워크 수정: Private 서브넷 라우팅에 NAT 게이트웨이 경로(0.0.0.0/0 → NAT) 추가로 외부 통신 복구
+- GitOps 복구: `root-app` 및 하위 앱(repoURL 오너 `garyjeong`로 정정), 동기화 정상화
+- ArgoCD UI 노출: ALB Ingress 생성 및 도메인 연결
+  - HTTP 임시 개방 → ACM 와일드카드(`*.garyzone.pro`, `garyzone.pro`) 발급 완료 후 HTTPS 활성화(80→443 리다이렉트)
+  - 접근: https://argocd.garyzone.pro
+- ExternalDNS 레코드 자동 생성 확인(가용)
+- 서비스 상태 대시보드: `service-status` 앱 동기화 정상, Ingress/ALB 동작(HTTPS 연동 예정)
+- 청소: 임시 파일 `.argo-cm.yaml` 제거
+
+---
+
 # Gary Cluster 현재 상태 리포트
 
 > **2025년 9월 10일 기준 - EKS 클러스터 완전 구축 및 운영 상태**

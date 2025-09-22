@@ -1,5 +1,0 @@
-apiVersion: v1
-data:
-  # The repositories key is removed entirely
-kind: ConfigMap
-metadata:
