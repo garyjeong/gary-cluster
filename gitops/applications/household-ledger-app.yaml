@@ -9,7 +9,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: 'https://github.com/gary/gary-cluster.git' # Should be your repo URL
+    repoURL: 'https://github.com/garyjeong/gary-cluster.git' # Should be your repo URL
     path: gitops/applications/household-ledger
     targetRevision: HEAD
   destination:
