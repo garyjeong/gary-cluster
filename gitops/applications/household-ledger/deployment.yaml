@@ -19,6 +19,7 @@ spec:
       labels:
         app: household-ledger
     spec:
+      serviceAccountName: household-ledger-sa
       containers:
         - name: household-ledger
           image: 014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/household-ledger:latest # Image will be updated by ArgoCD Image Updater
