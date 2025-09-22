@@ -11,7 +11,7 @@ metadata:
 spec:
   project: default
   source:
-    repoURL: git@github.com:gary/gary-cluster.git  # GitHub 사용자명 설정
+    repoURL: https://garyjeong@github.com/gary/gary-cluster.git # GitHub 사용자명 설정
     targetRevision: HEAD
     path: gitops/applications
   destination:
