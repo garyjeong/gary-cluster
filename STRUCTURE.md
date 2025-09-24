@@ -23,26 +23,21 @@ gary-cluster/
 │       ├── values.yaml                 # Helm values 설정
 │       └── cluster-issuer.yaml         # Let's Encrypt ClusterIssuer
 │
-├── applications/                       # 애플리케이션 매니페스트
-│   ├── namespaces/                     # 네임스페이스 정의
-│   │   └── environments.yaml           # dev, prod, gary-apps 네임스페이스
-│   ├── ingress/                        # Ingress 리소스 (추후 추가)
-│   └── smoke-test/                     # 테스트 애플리케이션
-│       └── hello-world.yaml            # 스모크 테스트용 Hello World
+├── applications/                       # (이전 경로, 점진적 제거 예정)
+│   └── namespaces/                     # 네임스페이스 정의
+│       └── environments.yaml           # gary-app 네임스페이스(단일)
 │
-├── environments/                       # 환경별 설정 (Kustomize)
-│   ├── dev/                            # 개발 환경
-│   │   └── kustomization.yaml          # 개발 환경 Kustomize 설정
-│   └── prod/                           # 프로덕션 환경
-│       └── kustomization.yaml          # 프로덕션 환경 Kustomize 설정
+├── environments/                       # (과거 구조) dev/prod 디렉터리 — 운영에선 미사용
 │
 ├── ecr/                                # ECR 리포지토리 설정
 │   └── repositories.yaml               # ECR 리포지토리 목록 및 정책
 │
 ├── gitops/                             # GitOps 설정 (Argo CD)
-│   ├── argocd/                         # Argo CD 설치 설정 (추후 추가)
-│   ├── applications/                   # Application 정의
-│   │   └── namespaces-app.yaml         # 네임스페이스, 스모크테스트 등 앱
+│   ├── argocd/                         # Argo CD 설치 설정
+│   ├── applications/                   # 모든 애플리케이션 정의(통합 경로)
+│   │   ├── household-ledger/
+│   │   ├── service-status/
+│   │   └── argocd-ingress/
 │   └── app-of-apps/                    # App-of-Apps 패턴
 │       └── root-app.yaml               # 루트 애플리케이션
 │

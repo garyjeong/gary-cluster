@@ -10,7 +10,7 @@ spec:
   project: default
   source:
     repoURL: 'https://github.com/garyjeong/gary-cluster.git'
-    path: applications/argocd-ingress
+    path: gitops/applications/argocd-ingress
     targetRevision: HEAD
   destination:
     server: 'https://kubernetes.default.svc'

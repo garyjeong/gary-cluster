@@ -14,7 +14,7 @@
         alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:014125597282:certificate/1249ba8a-b4bc-4254-bfda-f48d1c936d9e
     ```
 - GitOps
-  - App-of-Apps(`gitops/app-of-apps/root-app.yaml`)로 `gitops/applications`의 앱 자동 관리
+  - App-of-Apps(`gitops/app-of-apps/root-app.yaml`)로 `gitops/applications/`의 앱을 자동 관리 (모든 애플리케이션 매니페스트는 `gitops/applications/` 하위에 위치)
   - 리포지토리 소유자: `github.com/garyjeong/gary-cluster`
   - 변경 후 동기화 강제: `kubectl annotate application <app> -n argocd argocd.argoproj.io/refresh=hard --overwrite`
 - DNS
