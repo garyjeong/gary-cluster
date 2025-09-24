@@ -39,16 +39,6 @@ spec:
                   key: nextauth-secret
             - name: NEXTAUTH_URL
               value: "https://household-ledger.garyzone.pro"
-            - name: GOOGLE_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: household-ledger-secrets
-                  key: google-client-id
-            - name: GOOGLE_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: household-ledger-secrets
-                  key: google-client-secret
           resources:
             requests:
               cpu: 100m
