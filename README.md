@@ -55,7 +55,7 @@
 - **Route53 Hosted Zone**: `garyzone.pro` (Z0394568WTSPBSC5SBHO) 생성 완료
 - **ExternalDNS**: 설치 완료 및 정상 작동 중 (garyzone.pro 연동)
 - **IRSA 설정**: ExternalDNS용 IAM 역할 및 정책 구성 완료
-- **네임스페이스**: dev, prod, gary-apps 생성 완료
+- **네임스페이스**: gary-app (단일 운영)
 - **스모크 테스트 애플리케이션**: hello-world 배포 완료
 
 ### 🔄 **진행 중인 작업**
@@ -66,7 +66,7 @@
 ### 🎯 **다음 단계**
 
 - cert-manager 설치 완료
-- TLS 인증서 자동 발급 확인 (hello.dev.garyzone.pro)
+- TLS 인증서 자동 발급/연동(와일드카드 ACM 사용, dev/prod 네임스페이스 미사용)
 - GitOps 설정 (Argo CD)
 
 ## 🏗️ 아키텍처 개요

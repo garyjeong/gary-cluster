@@ -55,7 +55,7 @@ Route53 호스팅 존: garyzone.pro (Z0394568WTSPBSC5SBHO)
 ALB/Ingress 상태:
 ````
 
-Ingress(dev/service-status-ingress): k8s-dev-services-b29f9e82ee-1928776017.ap-northeast-2.elb.amazonaws.com
+Ingress(gary-app/service-status-ingress): k8s-garyapp-services-ab1ece1a4c-898658841.ap-northeast-2.elb.amazonaws.com
 Route53: A/AAAA Alias → 위 ALB 호스트명
 권장: 등록기관(NS)을 Route53 NS로 위임하여 전 세계 조회 일치
 
@@ -67,7 +67,7 @@ Route53: A/AAAA Alias → 위 ALB 호스트명
 
 ```
 cert-manager: 3개 파드 모두 Running
-ClusterIssuer: letsencrypt-prod, letsencrypt-staging 생성
+ClusterIssuer: (ACM 와일드카드 사용) — cert-manager 미사용 환경
 IRSA: Route53 권한 부여 완료
 현재 상태: staging 환경에서 DNS 전파 대기 중
 ```
