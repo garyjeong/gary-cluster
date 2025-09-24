@@ -11,7 +11,7 @@ spec:
   source:
     repoURL: https://github.com/garyjeong/gary-cluster.git  # GitHub 사용자명 설정
     targetRevision: HEAD
-    path: applications/namespaces
+    path: gitops/applications/namespaces
   destination:
     server: https://kubernetes.default.svc
     namespace: gary-app

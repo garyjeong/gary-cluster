@@ -9,8 +9,15 @@ metadata:
   annotations:
     argocd-image-updater.argoproj.io/image-list: household-ledger=014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/household-ledger:latest
     argocd-image-updater.argoproj.io/household-ledger.update-strategy: latest
+    deployment.kubernetes.io/revision: ""
 spec:
   replicas: 1
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
   selector:
     matchLabels:
       app: household-ledger
@@ -26,6 +33,28 @@ spec:
           imagePullPolicy: Always
           ports:
             - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 30
           env:
             - name: DATABASE_URL
               valueFrom:

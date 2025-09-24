@@ -1,0 +1,11 @@
+# 네임스페이스 정의 (단일)
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gary-app
+  labels:
+    name: gary-app
+    purpose: applications
+    managed-by: argocd
+
+
