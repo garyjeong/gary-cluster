@@ -10,7 +10,7 @@ metadata:
     argocd-image-updater.argoproj.io/image-list: household-ledger=014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/household-ledger:latest
     argocd-image-updater.argoproj.io/household-ledger.update-strategy: latest
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: household-ledger
