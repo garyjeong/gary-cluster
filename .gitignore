@@ -1,3 +1,27 @@
+# macOS
+.DS_Store
+
+# Terraform local state and artifacts
+.terraform/
+**/.terraform/**
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log
+*.tfvars
+*.tfvars.json
+*.tfplan
+override.tf
+override.tf.json
+*_override.tf
+*_override.tf.json
+.terraformrc
+terraform.rc
+
+# Keep the lock file tracked
+!.terraform.lock.hcl
+!terraform/.terraform.lock.hcl
+
 # 로그 파일
 *.log
 
