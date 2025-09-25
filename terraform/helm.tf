@@ -124,3 +124,24 @@ resource "helm_release" "cert_manager" {
   depends_on = [module.cert_manager_irsa, module.eks]
 }
 
+resource "helm_release" "external_secrets" {
+  name             = "external-secrets"
+  repository       = "https://charts.external-secrets.io"
+  chart            = "external-secrets"
+  namespace        = "external-secrets"
+  create_namespace = true
+  version          = "0.10.4"
+
+  values = [
+    yamlencode({
+      installCRDs = true
+      replicaCount = 1
+      metrics = {
+        serviceMonitor = { enabled = false }
+      }
+    })
+  ]
+
+  depends_on = [module.eks]
+}
+
