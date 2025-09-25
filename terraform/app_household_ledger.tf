@@ -24,18 +24,8 @@ module "eso_household_ledger_irsa" {
     }
   }
 
-  inline_policy_statements = {
-    secrets_read = {
-      effect = "Allow"
-      actions = [
-        "secretsmanager:GetSecretValue",
-        "secretsmanager:DescribeSecret",
-        "secretsmanager:ListSecretVersionIds"
-      ]
-      resources = [
-        "arn:aws:secretsmanager:${var.aws_region}:${data.aws_caller_identity.current.account_id}:secret:*"
-      ]
-    }
+  role_policy_arns = {
+    secrets_read = "arn:aws:iam::aws:policy/SecretsManagerReadOnly"
   }
 
   tags = local.default_tags

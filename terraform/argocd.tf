@@ -15,7 +15,7 @@ resource "helm_release" "argocd" {
       }
       configs = {
         params = {
-          "server\.insecure" = false
+          "server.insecure" = false
         }
       }
       controller = { replicas = 1 }
