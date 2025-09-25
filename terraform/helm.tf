@@ -12,7 +12,7 @@ resource "helm_release" "aws_load_balancer_controller" {
       clusterName = var.cluster_name
       region      = var.aws_region
       serviceAccount = {
-        create = false
+        create = true
         name   = "aws-load-balancer-controller"
         annotations = {
           "eks.amazonaws.com/role-arn" = module.alb_irsa.iam_role_arn
@@ -55,7 +55,7 @@ resource "helm_release" "external_dns" {
       registry = "txt"
       txtOwnerId = var.cluster_name
       serviceAccount = {
-        create = false
+        create = true
         name   = "external-dns"
         annotations = {
           "eks.amazonaws.com/role-arn" = module.external_dns_irsa.iam_role_arn
@@ -102,7 +102,7 @@ resource "helm_release" "cert_manager" {
     yamlencode({
       installCRDs = true
       serviceAccount = {
-        create = false
+        create = true
         name   = "cert-manager"
         annotations = {
           "eks.amazonaws.com/role-arn" = module.cert_manager_irsa.iam_role_arn
