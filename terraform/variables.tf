@@ -64,6 +64,30 @@ variable "cert_manager_email" {
   default     = "jeonggaryaws@gmail.com"
 }
 
+variable "acm_certificate_arn" {
+  description = "ALB Ingress에서 사용할 ACM 인증서 ARN"
+  type        = string
+  default     = "arn:aws:acm:ap-northeast-2:014125597282:certificate/1249ba8a-b4bc-4254-bfda-f48d1c936d9e"
+}
+
+variable "domain_argocd" {
+  description = "Argo CD Ingress 도메인"
+  type        = string
+  default     = "argocd.garyzone.pro"
+}
+
+variable "domain_household_ledger" {
+  description = "household-ledger Ingress 도메인"
+  type        = string
+  default     = "household-ledger.garyzone.pro"
+}
+
+variable "domain_service_status" {
+  description = "service-status Ingress 도메인"
+  type        = string
+  default     = "service-status.garyzone.pro"
+}
+
 variable "vpc_id" {
   description = "사용할 기존 VPC ID (생략 시 새 VPC 생성)"
   type        = string

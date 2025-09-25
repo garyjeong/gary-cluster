@@ -8,10 +8,6 @@ module "eks" {
 
   cluster_tags = local.default_tags
 
-  access_config = {
-    authentication_mode                         = "API_AND_CONFIG_MAP"
-    bootstrap_cluster_creator_admin_permissions = true
-  }
 
   vpc_id     = local.vpc_id
   subnet_ids = concat(local.private_subnet_ids, local.public_subnet_ids)
