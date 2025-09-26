@@ -1,0 +1,75 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: household-ledger
+  namespace: gary-app
+  labels:
+    app: household-ledger
+    managed-by: argocd
+  annotations:
+    deploy.garyzone.pro/image-tag: "39e1a14"
+spec:
+  replicas: 1
+  revisionHistoryLimit: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app: household-ledger
+  template:
+    metadata:
+      labels:
+        app: household-ledger
+    spec:
+      serviceAccountName: household-ledger-sa
+      containers:
+        - name: household-ledger
+          image: 014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/household-ledger:39e1a14
+          imagePullPolicy: Always
+          ports:
+            - containerPort: 3000
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 20
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 3
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: 3000
+            periodSeconds: 5
+            failureThreshold: 30
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "200m"
+              memory: "512Mi"
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: household-ledger-secrets
+                  key: database-url
+            - name: NEXTAUTH_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: household-ledger-secrets
+                  key: nextauth-secret
+            - name: NEXTAUTH_URL
+              value: https://household-ledger.garyzone.pro
