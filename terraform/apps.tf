@@ -48,6 +48,7 @@ resource "kubernetes_manifest" "household_ledger_service" {
     metadata = {
       name      = "household-ledger-service"
       namespace = "gary-app"
+      labels    = { app = "household-ledger", managed-by = "terraform" }
     }
     spec = {
       selector = { app = "household-ledger" }
@@ -66,6 +67,7 @@ resource "kubernetes_manifest" "household_ledger_ingress" {
     metadata = {
       name      = "household-ledger-ingress"
       namespace = "gary-app"
+      labels    = { app = "household-ledger", managed-by = "terraform" }
       annotations = {
         "kubernetes.io/ingress.class"                    = "alb"
         "alb.ingress.kubernetes.io/scheme"              = "internet-facing"
@@ -109,7 +111,7 @@ resource "kubernetes_manifest" "household_ledger_deployment" {
     "metadata" = {
       "name"      = "household-ledger"
       "namespace" = "gary-app"
-      "labels" = { "app" = "household-ledger" }
+        "labels" = { "app" = "household-ledger", "managed-by" = "terraform" }
     }
     "spec" = {
       "replicas" = 1
