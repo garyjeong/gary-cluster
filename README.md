@@ -35,6 +35,37 @@ terraform -chdir=terraform apply tfplan
 3) 주요 변수 수정: `terraform/variables.tf`
 - `aws_region`, `cluster_name`, `acm_certificate_arn`, `domain_*`
 
+#### CI 배포(불변 태그)
+`household-ledger`는 Argo 없이 Terraform 단독으로 관리합니다. CI가 ECR에 `:GIT_SHA`로 푸시한 뒤, 아래 워크플로로 해당 태그를 적용합니다.
+
+1) 이미지 빌드/푸시 예시(별도 레포에서)
+```bash
+IMAGE=014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/household-ledger
+TAG=$(git rev-parse --short HEAD)
+docker build -t $IMAGE:$TAG .
+docker push $IMAGE:$TAG
+# (옵션) latest도 유지하는 경우
+docker tag $IMAGE:$TAG $IMAGE:latest && docker push $IMAGE:latest
+```
+
+2) GitHub Actions로 Terraform 적용 트리거
+- 워크플로: `.github/workflows/deploy-household-ledger.yml`
+- 수동 실행: Actions > Deploy household-ledger (Terraform) > image_tag 입력
+- 또는 repository_dispatch 이벤트(payload: `{ "image_tag": "<sha>" }`)
+
+3) 수동 명령으로도 적용 가능
+```bash
+terraform -chdir=terraform init -upgrade
+terraform -chdir=terraform apply -auto-approve \
+  -var="household_ledger_image_tag=<GIT_SHA>"
+```
+
+4) 반영 확인
+```bash
+kubectl -n gary-app get deploy household-ledger -o jsonpath='{.spec.template.spec.containers[0].image}'; echo
+kubectl -n gary-app rollout status deploy/household-ledger
+```
+
 ### 도메인/네임서버
 - Hosted Zone: `garyzone.pro`(Route53). 등록기관 NS를 Route53 NS로 위임 권장
 - Ingress 생성 시 ALB 할당 → ExternalDNS가 A/AAAA Alias 생성

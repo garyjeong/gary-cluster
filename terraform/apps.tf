@@ -120,13 +120,18 @@ resource "kubernetes_manifest" "household_ledger_deployment" {
       }
       "selector" = { "matchLabels" = { "app" = "household-ledger" } }
       "template" = {
-        "metadata" = { "labels" = { "app" = "household-ledger" } }
+        "metadata" = {
+          "labels" = { "app" = "household-ledger" }
+          "annotations" = {
+            "deploy.garyzone.pro/image-tag" = var.household_ledger_image_tag
+          }
+        }
         "spec" = {
           "serviceAccountName" = "household-ledger-sa"
           "containers" = [
             {
               "name"  = "household-ledger"
-              "image" = "014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/household-ledger:latest"
+              "image" = "${var.household_ledger_image_repo}:${var.household_ledger_image_tag}"
               "imagePullPolicy" = "Always"
               "ports" = [{ "containerPort" = 3000 }]
               "livenessProbe"  = { "httpGet" = { "path" = "/api/health", "port" = 3000 }, "initialDelaySeconds" = 20, "periodSeconds" = 15, "timeoutSeconds" = 5, "failureThreshold" = 3 }

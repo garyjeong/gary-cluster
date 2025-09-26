@@ -88,6 +88,19 @@ variable "domain_service_status" {
   default     = "service-status.garyzone.pro"
 }
 
+# Household Ledger 이미지 설정 (불변 태그 배포용)
+variable "household_ledger_image_repo" {
+  description = "ECR repository for household-ledger"
+  type        = string
+  default     = "014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/household-ledger"
+}
+
+variable "household_ledger_image_tag" {
+  description = "Immutable image tag (e.g., git SHA)"
+  type        = string
+  default     = "latest"
+}
+
 variable "vpc_id" {
   description = "사용할 기존 VPC ID (생략 시 새 VPC 생성)"
   type        = string
