@@ -22,11 +22,18 @@ spec:
       labels:
         app: service-status
     spec:
+      serviceAccountName: service-status-sa
       containers:
         - name: service-status
           image: 014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/service-status:latest
           ports:
             - containerPort: 80
+          env:
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: service-status-secrets
+                  key: db_password
           livenessProbe:
             httpGet:
               path: /
