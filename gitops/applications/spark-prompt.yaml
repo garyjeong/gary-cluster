@@ -1,0 +1,20 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: spark-prompt
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/garyjeong/gary-cluster.git
+    path: gitops/apps/spark-prompt
+    targetRevision: HEAD
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: gary-app
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

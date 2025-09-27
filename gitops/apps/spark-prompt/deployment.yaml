@@ -24,6 +24,7 @@ spec:
       labels:
         app: spark-prompt
     spec:
+      serviceAccountName: spark-prompt-sa
       containers:
         - name: spark-prompt
           image: 014125597282.dkr.ecr.ap-northeast-2.amazonaws.com/spark-prompt:latest
