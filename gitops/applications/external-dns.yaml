@@ -1,0 +1,50 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: external-dns
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://kubernetes-sigs.github.io/external-dns/
+    chart: external-dns
+    targetRevision: 1.15.0
+    helm:
+      values: |
+        provider: aws
+        domainFilters:
+          - garyzone.pro
+          - garyzone.ai
+        sources: [ingress, service]
+        registry: txt
+        txtOwnerId: gary-cluster
+        serviceAccount:
+          create: true
+          name: external-dns
+          annotations:
+            eks.amazonaws.com/role-arn: arn:aws:iam::014125597282:role/gary-cluster-external-dns
+        aws:
+          region: ap-northeast-2
+          zoneType: public
+          evaluateTargetHealth: true
+        resources:
+          limits:
+            cpu: 50m
+            memory: 50Mi
+          requests:
+            cpu: 25m
+            memory: 25Mi
+        interval: 1m
+        policy: sync
+        annotationFilter: external-dns.alpha.kubernetes.io/hostname
+        metrics:
+          enabled: true
+          port: 7979
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kube-system
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+
